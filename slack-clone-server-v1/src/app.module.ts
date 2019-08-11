@@ -6,9 +6,7 @@ import { RecipesModule } from './recipes/recipes.module';
 @Module({
   imports: [
     GraphQLModule.forRoot({
-      debug: false,
-      playground: true,
-      autoSchemaFile: 'schema.gql'
+      typePaths: ['./**/*.graphql']
     }),
     RecipesModule
   ],
