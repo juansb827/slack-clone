@@ -7,7 +7,7 @@ import { User } from '../graphql.schema';
 import { UserService } from './user.service';
 
 @Resolver('User')
-export class UsersResolver {
+export class UserResolver {
   constructor(
     private readonly userService: UserService) {    
   }

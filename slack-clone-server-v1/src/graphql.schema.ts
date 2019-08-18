@@ -22,6 +22,8 @@ export class Message {
 }
 
 export abstract class IMutation {
+    abstract createTeam(name: string): boolean | Promise<boolean>;
+
     abstract createUser(username: string, email: string, password: string): User | Promise<User>;
 }
 

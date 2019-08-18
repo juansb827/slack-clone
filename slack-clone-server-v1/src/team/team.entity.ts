@@ -9,7 +9,9 @@ export class Team {
     @Column({ unique: true })
     name: string;
 
-    @ManyToOne(type => User, user => user.teams)
+    @ManyToOne(type => User, user => user.teams, {
+        nullable: false
+    })
     owner: User
 
     @ManyToMany(type => User)
