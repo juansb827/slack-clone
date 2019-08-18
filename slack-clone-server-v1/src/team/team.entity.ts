@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { User } from 'src/user/user.entity';
+import { Channel } from 'src/channel/channel.entity';
 @Entity()
 export class Team {
     @PrimaryGeneratedColumn()
@@ -13,5 +14,10 @@ export class Team {
 
     @ManyToMany(type => User)
     @JoinTable()
-    members: Team[];
+    members: User[];
+
+    @OneToMany(type => Channel, channel => channel.team)
+    channels: Channel[];
+
+    
 }

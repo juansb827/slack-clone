@@ -1,0 +1,19 @@
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne} from 'typeorm';
+import { Message } from 'src/message/message.entity';
+import { Team } from 'src/team/team.entity';
+
+@Entity()
+export class Channel{
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    name: string;
+
+    public: boolean;
+
+    @OneToMany(type => Message, message => message.channel)
+    messages: Message[];
+
+    @ManyToOne(type => Team, team => team.channels)
+    team: Team;
+}

@@ -7,6 +7,8 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { TeamModule } from './team/team.module';
+import { MessageModule } from './message/message.module';
+import { ChannelModule } from './channel/channel.module';
 
 
 @Module({
@@ -21,7 +23,9 @@ import { TeamModule } from './team/team.module';
       inject: [ConfigService]
     }),
     UserModule,
-    TeamModule
+    TeamModule,
+    MessageModule,
+    ChannelModule
   ],
   controllers: [AppController],
   providers: [AppService],
