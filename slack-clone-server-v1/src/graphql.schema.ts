@@ -21,10 +21,16 @@ export class Message {
     channel: Channel;
 }
 
+export abstract class IMutation {
+    abstract createUser(username: string, email: string, password: string): User | Promise<User>;
+}
+
 export abstract class IQuery {
     abstract messages(): Message[] | Promise<Message[]>;
 
-    abstract users(): User[] | Promise<User[]>;
+    abstract allUsers(): User[] | Promise<User[]>;
+
+    abstract getUser(id: number): User | Promise<User>;
 }
 
 export class Team {

@@ -1,0 +1,3 @@
+Fix teams property in user entity
+teams = teams the user is a member of
+ownedTeams = teams the user owns
