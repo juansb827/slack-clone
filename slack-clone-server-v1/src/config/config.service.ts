@@ -19,7 +19,7 @@ export class ConfigService {
         return {
             type: 'postgres',
             url: this.get(DATABASE_URL),
-            entities: [__dirname + '/**/*.entity{.ts,.js}'],
+            entities: [ 'src/**/*.entity{.ts,.js}'],
             ssl: true,
             synchronize: true,
         }
