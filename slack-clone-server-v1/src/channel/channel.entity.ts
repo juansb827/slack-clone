@@ -8,9 +8,11 @@ export class Channel{
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column()
     name: string;
 
-    public: boolean;
+    @Column()
+    isPublic: boolean;
 
     @OneToMany(type => Message, message => message.channel)
     messages: Message[];

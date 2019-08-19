@@ -10,7 +10,9 @@ export class Message{
     @Column()
     text: string;
 
-    @ManyToOne(type => User, user => user.messages)
+    @ManyToOne(type => User, user => user.messages, {
+        nullable: false
+    })
     user: User;
 
     @ManyToOne(type => Channel, channel => channel.messages)

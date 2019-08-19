@@ -8,7 +8,7 @@
 export class Channel {
     id: number;
     name: string;
-    public: boolean;
+    isPublic: boolean;
     messages: Message[];
     users: User[];
 }
@@ -22,6 +22,10 @@ export class Message {
 }
 
 export abstract class IMutation {
+    abstract createChannel(teamId: number, name: string, isPublic?: boolean): boolean | Promise<boolean>;
+
+    abstract createMessage(channelId: number, text: string): boolean | Promise<boolean>;
+
     abstract createTeam(name: string): boolean | Promise<boolean>;
 
     abstract createUser(username: string, email: string, password: string): User | Promise<User>;
