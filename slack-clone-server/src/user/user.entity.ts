@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
-import { Team } from 'src/team/team.entity';
-import { Message } from 'src/message/message.entity';
+import { Team } from '../team/team.entity';
+import { Message } from '../message/message.entity';
 
 @Entity()
 export class User {
@@ -9,6 +9,9 @@ export class User {
 
     @Column({ unique: true })
     username: string;
+
+    @Column({ nullable: false })
+    password: string;
 
     @Column({ unique: true })
     email: string;

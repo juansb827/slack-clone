@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, ManyToMany, JoinTable} from 'typeorm';
-import { Message } from 'src/message/message.entity';
-import { Team } from 'src/team/team.entity';
-import { User } from 'src/user/user.entity';
+import { Message } from '../message/message.entity';
+import { Team } from '../team/team.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Channel{
