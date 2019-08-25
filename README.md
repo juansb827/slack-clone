@@ -1,6 +1,7 @@
 **Slack Clone**  
-Made just to put into practice the following cool stuff:  
+Putting into practice the following cool stuff:  
 
  - NestJS
  - GraphQL
  - Typescript
+ - React
