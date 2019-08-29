@@ -13,6 +13,11 @@ export class Channel {
     users: User[];
 }
 
+export class Error {
+    path: string;
+    message: string;
+}
+
 export class Message {
     id: number;
     username: string;
@@ -28,7 +33,7 @@ export abstract class IMutation {
 
     abstract createTeam(name: string): boolean | Promise<boolean>;
 
-    abstract register(username: string, email: string, password: string): boolean | Promise<boolean>;
+    abstract register(username: string, email: string, password: string): RegisterResponse | Promise<RegisterResponse>;
 }
 
 export abstract class IQuery {
@@ -37,6 +42,12 @@ export abstract class IQuery {
     abstract allUsers(): User[] | Promise<User[]>;
 
     abstract getUser(id: number): User | Promise<User>;
+}
+
+export class RegisterResponse {
+    ok: boolean;
+    user?: User;
+    errors?: Error[];
 }
 
 export class Team {

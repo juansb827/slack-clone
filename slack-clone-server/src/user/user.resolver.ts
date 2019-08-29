@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { Logger } from '@nestjs/common';
 
-import { User } from '../graphql.schema';
+import { User, RegisterResponse } from '../graphql.schema';
 import { UserService } from './user.service';
 
 @Resolver('User')
@@ -21,14 +21,21 @@ export class UserResolver {
   }
 
   @Mutation()
-  async register(@Args() args: User) {
+  async register(@Args() args: User): Promise<RegisterResponse> {
     Logger.log(args);
     try {
-      await this.userService.create(<any>args);
-      return true;
+      const user: any = await this.userService.create(<any>args);
+      Logger.log(user)
+      return {
+        ok: true,
+        user
+      };
     } catch (err) {
-      Logger.error(err);
-      return false;
+      Logger.error(JSON.stringify(err));
+      return {
+        ok: false,
+        errors: [{ path: err.name, message: err.message }]
+      };
     }
   }
 }
