@@ -28,7 +28,7 @@ export class User {
     @Length(3, 30, {
         message: 'The $property username has to be between $constraint1 and $constraint2 characters long'
     })
-    @IsEmail(null, {
+    @IsEmail({}, {
       message: 'Invalid email'  
     })
     email: string;

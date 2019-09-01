@@ -9,6 +9,7 @@ import { ConfigService } from './config/config.service';
 import { TeamModule } from './team/team.module';
 import { MessageModule } from './message/message.module';
 import { ChannelModule } from './channel/channel.module';
+import { CommonModule } from './common/common.module';
 
 
 @Module({
@@ -16,6 +17,7 @@ import { ChannelModule } from './channel/channel.module';
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql']
     }),
+    CommonModule,
     ConfigModule,
     TypeOrmModule.forRootAsync({
       imports:[ConfigModule],

@@ -5,10 +5,12 @@ import { Logger } from '@nestjs/common';
 
 import { User, RegisterResponse } from '../graphql.schema';
 import { UserService } from './user.service';
-
+import { ErrorHandler } from '../common/error/errorHandler';
 @Resolver('User')
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly errorHandler: ErrorHandler) {}
 
   @Query()
   async getUser(@Args('id') id: number) {
@@ -34,7 +36,7 @@ export class UserResolver {
       Logger.error(JSON.stringify(err));
       return {
         ok: false,
-        errors: [{ path: err.name, message: err.message }]
+        errors: this.errorHandler.formatError(err)
       };
     }
   }
