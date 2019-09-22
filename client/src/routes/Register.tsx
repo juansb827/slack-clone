@@ -2,8 +2,6 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import React, { useState } from "react";
 import { gql } from "apollo-boost";
 import { Container, Header, Input, Button, Message } from "semantic-ui-react";
-import { tsPropertySignature } from "@babel/types";
-import { cycleErrorMessage } from "graphql/validation/rules/NoFragmentCycles";
 
 const REGISTER_USER = gql`
   mutation($username: String!, $email: String!, $password: String!) {
@@ -76,7 +74,7 @@ const Register = props => {
 
   return (
     <Container text>
-      <Header as="h2">Header</Header>
+      <Header as="h2">Header</Header>                  
       <Input
         name="username"
         value={username}
@@ -103,12 +101,14 @@ const Register = props => {
         fluid
       />
       <Button onClick={onSubmitHandler}>Submit</Button>
-      {JSON.stringify(data)}
-      {errors && <Message
+
+      {errors && 
+        <Message
         error
         header="There was some errors with your submission"
         list={Object.keys(errors).map(key => errors[key])}
-      />}
+        />
+      }
     </Container>
   );
 };
