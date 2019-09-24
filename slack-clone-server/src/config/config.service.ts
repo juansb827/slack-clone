@@ -25,4 +25,9 @@ export class ConfigService {
             logging: true
         }
     }
+
+    getSecrets() {
+        //TODO take from somehwere else
+        return ['sdhjfaskfhksajfhljads','adfljasflkasjflñkas'];
+    }
 }

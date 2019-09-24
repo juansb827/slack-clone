@@ -18,6 +18,13 @@ export class Error {
     message: string;
 }
 
+export class LoginResponse {
+    ok: boolean;
+    token?: string;
+    refreshToken?: string;
+    errors?: Error[];
+}
+
 export class Message {
     id: number;
     username: string;
@@ -34,6 +41,8 @@ export abstract class IMutation {
     abstract createTeam(name: string): boolean | Promise<boolean>;
 
     abstract register(username: string, email: string, password: string): RegisterResponse | Promise<RegisterResponse>;
+
+    abstract login(email: string, password: string): LoginResponse | Promise<LoginResponse>;
 }
 
 export abstract class IQuery {

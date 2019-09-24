@@ -22,9 +22,25 @@ export class UserResolver {
     return await this.userService.findAll();
   }
 
+  @Mutation(returns => User)
+  async login(@Args('email') email: string, @Args('password') password: string) {
+    try {
+      const userLogin: any = await this.userService.login(email, password);
+      return {
+        ok: true,
+          token: userLogin.token,
+          refreshToken: userLogin.refreshToken
+      };
+    } catch (err) {
+      return {
+        ok: false,
+        errors: this.errorHandler.formatError(err)
+      };
+    }
+  }
+
   @Mutation()
   async register(@Args() args: User): Promise<RegisterResponse> {
-    Logger.log(args);
     try {
       const user: any = await this.userService.create(<any>args);
       Logger.log(user)

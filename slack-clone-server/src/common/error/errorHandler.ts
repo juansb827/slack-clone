@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import { type } from 'os';
-import { ValidationErrors } from './error.interfaces';
+import { ValidationErrors, ClientError } from './error.interfaces';
 import { Error as ErrorResponse } from '../../graphql.schema';
 
 @Injectable()
 export class ErrorHandler {
-  constructor() {}
+  constructor() { }
 
   public checkForValidationErrors(errors: ValidationError[]) {
     if (!errors || !errors.length) {
@@ -17,7 +17,7 @@ export class ErrorHandler {
   }
 
   public formatError(err): ErrorResponse[] {
-    if (err instanceof ValidationErrors) {
+    if (err instanceof ValidationErrors) { // Format errors from the class validator library
       const errors: ErrorResponse[] = [];
 
       err.errors.forEach(({ property, constraints }) => {
@@ -30,9 +30,12 @@ export class ErrorHandler {
       });
       return errors;
     }
+    if (err instanceof ClientError) { // Format errors from the class validator library
+      return err.errors;
+    }
     return [{
-        path: 'name',
-        message: 'something went wrong'
+      path: 'name',
+      message: 'something went wrong'
     }]
   }
 }
