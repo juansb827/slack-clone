@@ -1,51 +1,63 @@
 // Render Prop
-import React from "react";
-import { Formik } from "formik";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import React, { useState } from "react";
+import { gql } from "apollo-boost";
+import { Formik, ErrorMessage } from "formik";
 import { Form, Message, Header, Container } from "semantic-ui-react";
 
-const Basic = () => (
-      
-    <Formik
-      initialValues={{ email: "", password: "" }}
-      validate={values => {
-        let errors: any = {};
-        if (!values.email) {
-          errors.email = "Email is required";
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-        ) {
-          errors.email = "Invalid email address";
-        }
+const Basic = () => {
+  const [login, { data, loading, error }] = useMutation(LOGIN_USER);
+  let [initialValues, setInitialValues] = useState({ email: "1", password: "1" });
+  const onSubmitHandler = async (values, actions) => {
+    console.log(values);
+    setInitialValues(values);
+    const response: any = await login({ variables: values});
+    const {ok, token, refreshToken} = response.data.login;
+    if (ok) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+  };
 
-        const password = values.password;
-        if (!password) {
-          errors.password = "Password is required";
-        } else if (password.length < 5  || password.length > 50) {
-          errors.password = "Invalid password length";
-        }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+  return (
 
+  <Formik
+    initialValues={initialValues}
+    validate={values => {
+      let errors: any = {};
+      if (!values.email) {
+        errors.email = "Email is required";
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+      ) {
+        errors.email = "Invalid email address";
+      }
 
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting
-      }) => (
-        <Container text>
-        <Header as="h2">Login</Header>
-        <Form error>          
+      const password = values.password;
+      if (!password) {
+        errors.password = "Password is required";
+      } else if (password.length < 5 || password.length > 50) {
+        errors.password = "Invalid password length";
+      }
+
+      return errors;
+    }}
+    onSubmit={onSubmitHandler}
+  >
+    {({
+      values,
+      errors,
+      touched,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      isSubmitting
+    }) => (
+      <Container text>
+        <Header as="h2">Login  {JSON.stringify(initialValues)} </Header>
+        <Form error onSubmit={handleSubmit}>
           <Form.Input
             type="email"
             name="email"
@@ -55,12 +67,10 @@ const Basic = () => (
             error={!!(errors.email && touched.email)}
             fluid
           />
-          {errors.email && touched.email &&
-            <Message
-              error              
-              content={errors.email}
-            />
-          }
+          <ErrorMessage name="email" component={Message} />
+
+          
+
           <Form.Input
             type="password"
             name="password"
@@ -70,20 +80,30 @@ const Basic = () => (
             error={!!(errors.password && touched.password)}
             fluid
           />
-           {errors.password && touched.password &&
-            <Message
-              error              
-              content={errors.password}
-            />
-          }
+          <ErrorMessage name="password" component={Message}/>
+         
 
           <button type="submit" disabled={isSubmitting}>
             Submit
-          </button>                   
+          </button>
         </Form>
-        </Container>
-      )}
-    </Formik>  
-);
+      </Container>
+    )}
+  </Formik>
+)};
 
 export default Basic;
+
+const LOGIN_USER = gql`
+  mutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      ok
+      token
+      refreshToken
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;

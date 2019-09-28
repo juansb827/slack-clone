@@ -55,7 +55,8 @@ export class UserService {
     }
 
     const [secret, secret2] = this.configService.getSecrets();
-    const [token, refreshToken] = await createTokens(user, secret, secret2); 
+    const refreshTokenSecret = user.password + secret2;
+    const [token, refreshToken] = await createTokens(user, secret, refreshTokenSecret); 
     return {
       token,
       refreshToken
