@@ -5,6 +5,11 @@
  */
 
 /* tslint:disable */
+export class LoginInput {
+    email: string;
+    password: string;
+}
+
 export class Channel {
     id: number;
     name: string;
@@ -42,7 +47,7 @@ export abstract class IMutation {
 
     abstract register(username: string, email: string, password: string): RegisterResponse | Promise<RegisterResponse>;
 
-    abstract login(email: string, password: string): LoginResponse | Promise<LoginResponse>;
+    abstract login(loginInput?: LoginInput): LoginResponse | Promise<LoginResponse>;
 }
 
 export abstract class IQuery {

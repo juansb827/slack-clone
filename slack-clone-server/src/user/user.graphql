@@ -12,7 +12,7 @@ type Query {
 
 type Mutation {
   register(username: String!, email: String!, password: String!): RegisterResponse! 
-  login(email: String!, password: String!): LoginResponse!
+  login(loginInput: LoginInput): LoginResponse!
 }
 
 type RegisterResponse {
@@ -26,4 +26,9 @@ type LoginResponse {
   token: String,
   refreshToken: String, 
   errors: [Error!] 
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }

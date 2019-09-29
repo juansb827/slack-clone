@@ -1,11 +1,10 @@
-import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { PubSub } from 'apollo-server-express';
 import { Logger } from '@nestjs/common';
 
-import { User, RegisterResponse } from '../graphql.schema';
+import { User, RegisterResponse, LoginResponse, LoginInput } from '../graphql.schema';
 import { UserService } from './user.service';
 import { ErrorHandler } from '../common/error/errorHandler';
+import { LoginDto } from './dto/login.dto';
 @Resolver('User')
 export class UserResolver {
   constructor(
@@ -22,10 +21,10 @@ export class UserResolver {
     return await this.userService.findAll();
   }
 
-  @Mutation(returns => User)
-  async login(@Args('email') email: string, @Args('password') password: string) {
+  @Mutation()
+  async login(@Args('loginInput') args: LoginDto): Promise<LoginResponse> {
     try {
-      const userLogin: any = await this.userService.login(email, password);
+      const userLogin: any = await this.userService.login(args.email, args.password);
       return {
         ok: true,
           token: userLogin.token,
