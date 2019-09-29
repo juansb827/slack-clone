@@ -38,4 +38,11 @@ export class ErrorHandler {
       message: 'something went wrong'
     }]
   }
+  
+  public createErrorResponse(err) {
+    return {
+      ok: false,
+      errors: this.formatError(err)
+    };
+  }
 }

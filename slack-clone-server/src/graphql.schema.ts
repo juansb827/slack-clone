@@ -10,6 +10,12 @@ export class LoginInput {
     password: string;
 }
 
+export class RegisterInput {
+    username: string;
+    email: string;
+    password: string;
+}
+
 export class Channel {
     id: number;
     name: string;
@@ -45,7 +51,7 @@ export abstract class IMutation {
 
     abstract createTeam(name: string): boolean | Promise<boolean>;
 
-    abstract register(username: string, email: string, password: string): RegisterResponse | Promise<RegisterResponse>;
+    abstract register(registerInput?: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
 
     abstract login(loginInput?: LoginInput): LoginResponse | Promise<LoginResponse>;
 }

@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
-import { Repository, EntityManager, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { getManager } from 'typeorm';
-import { ValidationError} from '@nestjs/common';
-import { Logger } from '@nestjs/common';
+import { Repository, EntityManager } from 'typeorm';
 import { User } from './user.entity';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
@@ -12,6 +9,8 @@ import { ErrorHandler } from '../common/error/errorHandler';
 import { ClientError } from '../common/error/error.interfaces';
 import jwt from 'jsonwebtoken';
 import { ConfigService } from '../config/config.service';
+import { LoginDto } from './dto/login.dto';
+import { RegisterInput } from 'src/graphql.schema';
 
 @Injectable()
 export class UserService {
@@ -23,11 +22,11 @@ export class UserService {
     private readonly configService: ConfigService
   ) {}
 
-  async create(user: User): Promise<User> {
-    const userInstance: User = plainToClass(User, user);
+  async create(registerInput: RegisterInput): Promise<User> {
+    const userInstance: User = plainToClass(User, registerInput);
     const errors = await validate(userInstance);
     this.errorHandler.checkForValidationErrors(errors);
-    userInstance.password = await bcrypt.hash(user.password, 12);
+    userInstance.password = await bcrypt.hash(userInstance.password, 12);
     const newUser = await this.entityManager.save(userInstance);
     delete newUser.password;
     return newUser;
@@ -41,27 +40,31 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
-  async login(email: string, password: string) {
-    const user = await this.userRepository.findOne({
+  async login(loginDto: LoginDto) {
+    const loginInstance: LoginDto = plainToClass(LoginDto, loginDto);
+    const errors = await validate(loginInstance);
+    this.errorHandler.checkForValidationErrors(errors);
+    const { email, password} = loginInstance;
+
+    const user: User = await this.userRepository.findOne({
       email
     });
 
     if (!user) {
-      throw new ClientError([{ path: 'email', message: 'Invalid Login'}]);
+      throw new ClientError([{ path: 'credentials', message: 'Invalid Credentials'}]);
     }
     const valid = await bcrypt.compare(password, user.password);
     if(!valid) {
-      throw new ClientError([{ path: 'email', message: 'Invalid Loginn'}]);  
+      throw new ClientError([{ path: 'credentials', message: 'Invalid Credentials'}]);  
     }
 
     const [secret, secret2] = this.configService.getSecrets();
-    const refreshTokenSecret = user.password + secret2;
+    const refreshTokenSecret = user.password + secret2; // user can no longer refresh if it changes password
     const [token, refreshToken] = await createTokens(user, secret, refreshTokenSecret); 
     return {
       token,
       refreshToken
     }
-
   }
 
   
