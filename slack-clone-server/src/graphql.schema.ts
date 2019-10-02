@@ -53,7 +53,7 @@ export abstract class IMutation {
 
     abstract register(registerInput?: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
 
-    abstract login(loginInput?: LoginInput): LoginResponse | Promise<LoginResponse>;
+    abstract login(input?: LoginInput): LoginResponse | Promise<LoginResponse>;
 }
 
 export abstract class IQuery {

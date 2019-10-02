@@ -23,7 +23,7 @@ export class UserResolver {
   }
 
   @Mutation()
-  async login(@Args('loginInput') args: LoginDto): Promise<LoginResponse> {
+  async login(@Args('input') args: LoginDto): Promise<LoginResponse> {
     try {
       const userLogin: any = await this.userService.login(args);
       return {
