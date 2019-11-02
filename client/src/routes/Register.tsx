@@ -1,11 +1,12 @@
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
-import { Container, Header, Input, Button, Message } from 'semantic-ui-react';
-
+import { Container, Header, Input, Button, Message, Form } from 'semantic-ui-react';
+import { pick } from 'lodash';
+import { ErrorMessage } from 'formik';
 const REGISTER_USER = gql`
-    mutation($username: String!, $email: String!, $password: String!) {
-        register(username: $username, email: $email, password: $password) {
+    mutation($input: RegisterInput) {
+        register(input: $input) {
             ok
             errors {
                 path
@@ -55,7 +56,11 @@ const Register = props => {
             errors: null,
         }));
 
-        const response = await register({ variables: formState });
+        const response = await register({
+            variables: {
+                input: pick(formState, ['username', 'email', 'password']),
+            },
+        });
         const { ok, errors } = response.data.register;
         if (ok) {
             props.history.push('/');
@@ -74,41 +79,45 @@ const Register = props => {
 
     return (
         <Container text>
-            <Header as="h2">Header</Header>
-            <Input
-                name="username"
-                value={username}
-                error={!!(errors && errors.username)}
-                onChange={onChangeHandler}
-                placeholder="Username"
-                fluid
-            />
-            <Input
-                name="email"
-                value={email}
-                error={!!(errors && errors.email)}
-                onChange={onChangeHandler}
-                placeholder="Email"
-                fluid
-            />
-            <Input
-                name="password"
-                value={password}
-                error={!!(errors && errors.password)}
-                onChange={onChangeHandler}
-                placeholder="Password"
-                type="password"
-                fluid
-            />
-            <Button onClick={onSubmitHandler}>Submit</Button>
-
-            {errors && (
-                <Message
-                    error
-                    header="There was some errors with your submission"
-                    list={Object.keys(errors).map(key => errors[key])}
+            <Form error onSubmit={onSubmitHandler}>
+                <Header as="h2">Header</Header>
+                <Form.Input
+                    name="username"
+                    value={username}
+                    error={!!(errors && errors.username)}
+                    onChange={onChangeHandler}
+                    placeholder="Username"
+                    fluid
                 />
-            )}
+                <ErrorMessage name="username" component={Message} />
+                <Form.Input
+                    type="email"
+                    name="email"
+                    value={email}
+                    error={!!(errors && errors.email)}
+                    onChange={onChangeHandler}
+                    placeholder="Email"
+                    fluid
+                />
+                <Form.Input
+                    name="password"
+                    value={password}
+                    error={!!(errors && errors.password)}
+                    onChange={onChangeHandler}
+                    placeholder="Password"
+                    type="password"
+                    fluid
+                />
+                <Button onClick={onSubmitHandler}>Submit</Button>
+
+                {errors && (
+                    <Message
+                        error
+                        header="There was some errors with your submission"
+                        list={Object.keys(errors).map(key => errors[key])}
+                    />
+                )}
+            </Form>
         </Container>
     );
 };

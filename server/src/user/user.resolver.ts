@@ -37,15 +37,15 @@ export class UserResolver {
   }
 
   @Mutation()
-  async register(@Args('registerInput') args: RegisterInput): Promise<RegisterResponse> {
+  async register(@Args('input') args: RegisterInput): Promise<RegisterResponse> {
     try {
       const user: any = await this.userService.create(args);
-      Logger.log(user)
       return {
         ok: true,
         user
       };
     } catch (err) {
+      Logger.error(JSON.stringify(err));
       return this.errorHandler.createErrorResponse(err);
     }
   }

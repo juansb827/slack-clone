@@ -30,7 +30,7 @@ export class ErrorHandler {
       });
       return errors;
     }
-    if (err instanceof ClientError) { // Format errors from the class validator library
+    if (err instanceof ClientError) { // Format customer errors
       return err.errors;
     }
     return [{

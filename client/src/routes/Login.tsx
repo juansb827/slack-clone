@@ -5,9 +5,23 @@ import { gql } from 'apollo-boost';
 import { Formik, ErrorMessage } from 'formik';
 import { Form, Message, Header, Container } from 'semantic-ui-react';
 
-const Basic = () => {
-    const [login, { data, loading, error }] = useMutation(LOGIN_USER);
-    let [initialValues, setInitialValues] = useState({
+const LOGIN_USER = gql`
+    mutation($input: LoginInput!) {
+        login(input: $input) {
+            ok
+            token
+            refreshToken
+            errors {
+                path
+                message
+            }
+        }
+    }
+`;
+
+const Basic = (): any => {
+    const [login, { loading, error }] = useMutation(LOGIN_USER);
+    const [initialValues, setInitialValues] = useState({
         email: '1',
         password: '1',
     });
@@ -96,16 +110,4 @@ const Basic = () => {
 
 export default Basic;
 
-const LOGIN_USER = gql`
-    mutation($input: LoginInput!) {
-        login(input: $input) {
-            ok
-            token
-            refreshToken
-            errors {
-                path
-                message
-            }
-        }
-    }
-`;
+

@@ -30,7 +30,9 @@
         // Indent props with 4 spaces
         "react/jsx-indent-props": ["error", 4],
         "no-any": 0,
-        "@typescript-eslint/no-explicit-any": 0
+        "@typescript-eslint/no-explicit-any": 0,
+        //"@typescript-eslint/typedef": 0,
+        "@typescript-eslint/explicit-function-return-type": 0
     },
     "settings": {
         "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
