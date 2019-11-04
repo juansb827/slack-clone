@@ -5,6 +5,10 @@
  */
 
 /* tslint:disable */
+export class CreateTeamInput {
+    name: string;
+}
+
 export class LoginInput {
     email: string;
     password: string;
@@ -22,6 +26,11 @@ export class Channel {
     isPublic: boolean;
     messages: Message[];
     users: User[];
+}
+
+export class CreateTeamResponse {
+    ok: boolean;
+    errors?: Error[];
 }
 
 export class Error {
@@ -49,7 +58,7 @@ export abstract class IMutation {
 
     abstract createMessage(channelId: number, text: string): boolean | Promise<boolean>;
 
-    abstract createTeam(name: string): boolean | Promise<boolean>;
+    abstract createTeam(input: CreateTeamInput): CreateTeamResponse | Promise<CreateTeamResponse>;
 
     abstract register(input?: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
 

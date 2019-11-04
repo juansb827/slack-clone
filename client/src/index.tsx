@@ -14,6 +14,15 @@ import 'semantic-ui-css/semantic.min.css';
 
 const client = new ApolloClient({
     uri: 'http://localhost:8080/graphql',
+    request: async (operation) => {
+        operation.setContext({
+          headers: {
+            'x-token': localStorage.getItem('token'),
+            'x-refresh-token': localStorage.getItem('refreshToken'),
+          },
+        });
+      },
+    
 });
 
 const App: any = (

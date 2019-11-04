@@ -45,7 +45,6 @@ export class UserResolver {
         user
       };
     } catch (err) {
-      Logger.error(JSON.stringify(err));
       return this.errorHandler.createErrorResponse(err);
     }
   }
