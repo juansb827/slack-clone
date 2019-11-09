@@ -10,8 +10,6 @@ import { TeamModule } from './team/team.module';
 import { MessageModule } from './message/message.module';
 import { ChannelModule } from './channel/channel.module';
 import { CommonModule } from './common/common.module';
-import { TeamResolver } from './team/team.resolver';
-
 
 @Module({
   imports: [
@@ -23,24 +21,18 @@ import { TeamResolver } from './team/team.resolver';
     ConfigModule,
     TypeOrmModule.forRootAsync({
       imports:[ConfigModule],
-      useFactory: async (configService: ConfigService) => configService.getTypeORMConfig(),
+      useFactory: async (configService: ConfigService) => { console.log('Type ORM********') ;return configService.getTypeORMConfig()},
       inject: [ConfigService]
     }),
     UserModule,
     TeamModule,
     MessageModule,
-    ChannelModule
+    ChannelModule,
+    
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService ],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply((req, res, next) => {
-        console.log('Middleware', '*************');
-        //next();
-      })
-      .forRoutes(TeamResolver)
-  }
+  
 }

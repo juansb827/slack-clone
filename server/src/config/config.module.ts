@@ -7,7 +7,7 @@ import { ConfigService } from './config.service';
     {
       provide: ConfigService,
       useValue: new ConfigService(`.env`),
-    },
+    }
   ],
   exports: [ConfigService],
 })

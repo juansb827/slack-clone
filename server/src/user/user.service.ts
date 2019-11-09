@@ -7,10 +7,10 @@ import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { ErrorHandler } from '../common/error/errorHandler';
 import { ClientError } from '../common/error/error.interfaces';
-import jwt from 'jsonwebtoken';
 import { ConfigService } from '../config/config.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterInput } from 'src/graphql.schema';
+import { createTokens } from '../common/auth/auth.utils';
 
 @Injectable()
 export class UserService {
@@ -36,7 +36,7 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findOneById(id: number): Promise<User> {
+  findOneById(id: string): Promise<User> {
     return this.userRepository.findOne(id);
   }
 
@@ -59,8 +59,8 @@ export class UserService {
     }
 
     const [secret, secret2] = this.configService.getSecrets();
-    const refreshTokenSecret = user.password + secret2; // user can no longer refresh if it changes password
-    const [token, refreshToken] = await createTokens(user, secret, refreshTokenSecret); 
+    // user can no longer refresh if it changes password
+    const {token, refreshToken} = await createTokens(user, secret, secret2); 
     return {
       token,
       refreshToken
@@ -70,26 +70,4 @@ export class UserService {
   
 }
 
-export const createTokens = async (user, secret, secret2) => {
-  const createToken = jwt.sign(
-    {
-      user:  { id: user.id }
-    },
-    secret,
-    {
-      expiresIn: '1h',
-    },
-  );
 
-  const createRefreshToken = jwt.sign(
-    {
-      user: { id: user.id }
-    },
-    secret2,
-    {
-      expiresIn: '7d',
-    },
-  );
-
-  return [createToken, createRefreshToken];
-};

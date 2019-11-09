@@ -1,12 +1,11 @@
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { Logger, ValidationPipe, UsePipes } from '@nestjs/common';
-
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User, RegisterResponse, LoginResponse, RegisterInput } from '../graphql.schema';
 import { UserService } from './user.service';
 import { ErrorHandler } from '../common/error/errorHandler';
 import { LoginDto } from './dto/login.dto';
 
 @Resolver('User')
+
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
@@ -14,7 +13,7 @@ export class UserResolver {
 
   @Query()
   async getUser(@Args('id') id: number) {
-    return await this.userService.findOneById(id);
+    return await this.userService.findOneById(''+id);
   }
 
   @Query(returns => [User])
