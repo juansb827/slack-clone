@@ -6,6 +6,7 @@ import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import { refreshTokens } from "./auth.utils";
 import { UserService } from "../../user/user.service";
 import { AuthToken } from "./auth.interfaces";
+import { GqlContext } from "../graphql/graphql.interfaces";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -15,7 +16,7 @@ export class AuthGuard implements CanActivate {
     private userService: UserService) { } 
 
   async canActivate(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context).getContext();
+    const ctx: GqlContext = GqlExecutionContext.create(context).getContext();
     const { req, res } = ctx;
     const accessToken: string = req.headers['x-token'];
     const refreshToken: string = req.headers['x-refresh-token'];
@@ -23,8 +24,8 @@ export class AuthGuard implements CanActivate {
     const error = {
       ok: false,
       errors: [{
-        path: 'dsada',
-        message: 'dsdad'
+        path: 'auth',
+        message: 'invalid session token'
       }
       ]
     };

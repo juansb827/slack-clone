@@ -5,6 +5,7 @@ import { CreateTeamInput } from '../graphql.schema';
 import { TeamService } from './team.service';
 import { ErrorHandler } from '../common/error/errorHandler';
 import { AuthGuard } from '../common/auth/auth.guard';
+import { GqlContext } from '../common/graphql/graphql.interfaces';
 
 @Resolver('Team')
 @UseGuards(AuthGuard)
@@ -15,12 +16,11 @@ export class TeamResolver {
   }
 
   @Mutation()
-  async createTeam(@Args('input') args: CreateTeamInput, @Context() context) {
-    //console.log('Ctx', JSON.stringify(context.req.headers)); 
+  async createTeam(@Args('input') args: CreateTeamInput, @Context() context: GqlContext) {
     try {
       await this.teamService.create(<any>{
         ...args,
-        owner: 1 // TODO: infer from JWT
+        owner: context.user.id
       });
       return {
         ok: true

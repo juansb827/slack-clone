@@ -19,13 +19,7 @@ export const refreshTokens = async (
 
   jwt.verify(refreshToken, refreshSecret);
 
-  const newToken = jwt.sign({
-    user: { id: user.id }
-  },
-    secret, {
-    expiresIn: '1s',
-  },
-  );
+  const newToken = createNewToken(user, secret);
 
   return {
     user: { id: user.id },
@@ -34,15 +28,7 @@ export const refreshTokens = async (
 }
 
 export const createTokens = (user: User, secret, secret2) => {
-  const token: string = jwt.sign(
-    {
-      user: { id: user.id }
-    },
-    secret,
-    {
-      expiresIn: '1s',
-    },
-  );
+  const token: string = createNewToken(user, secret);
   // Makes refresh token invalid when user changes password
   const refreshTokenSecret = user.password + secret2;
   const refreshToken: string = jwt.sign(
@@ -61,3 +47,11 @@ export const createTokens = (user: User, secret, secret2) => {
     refreshToken
   };
 };
+
+const createNewToken = (user, secret) => jwt.sign({
+  user: { id: user.id }
+},
+  secret, {
+  expiresIn: '1h',
+},
+);

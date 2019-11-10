@@ -10,18 +10,19 @@ import { TeamModule } from './team/team.module';
 import { MessageModule } from './message/message.module';
 import { ChannelModule } from './channel/channel.module';
 import { CommonModule } from './common/common.module';
+import { GqlContext } from './common/graphql/graphql.interfaces';
 
 @Module({
   imports: [
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ req, res }): GqlContext => ({ req, res }),
     }),
     CommonModule,
     ConfigModule,
     TypeOrmModule.forRootAsync({
       imports:[ConfigModule],
-      useFactory: async (configService: ConfigService) => { console.log('Type ORM********') ;return configService.getTypeORMConfig()},
+      useFactory: async (configService: ConfigService) => configService.getTypeORMConfig(),
       inject: [ConfigService]
     }),
     UserModule,
