@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
 import { Formik, ErrorMessage } from 'formik';
 import { Form, Message, Header, Container } from 'semantic-ui-react';
+import { storeSessionTokens } from  '../common/auth.utils';
 
 const LOGIN_USER = gql`
     mutation($input: LoginInput!) {
@@ -19,7 +20,7 @@ const LOGIN_USER = gql`
     }
 `;
 
-const Basic = (): any => {
+const Basic = (props): any => {
     const [login, { loading, error }] = useMutation(LOGIN_USER);
     const [initialValues, setInitialValues] = useState({
         email: '1',
@@ -35,8 +36,8 @@ const Basic = (): any => {
         });
         const { ok, token, refreshToken } = response.data.login;
         if (ok) {
-            localStorage.setItem('token', token);
-            localStorage.setItem('refreshToken', refreshToken);
+            storeSessionTokens(token, refreshToken);
+            props.history.push('/');
         }
     };
 
